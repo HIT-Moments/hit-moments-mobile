@@ -1,3 +1,12 @@
 {
-    "hello": "Xin chào"
+    "hello": "Xin chào",
+    "collapse": "Thu gọn",
+    "seeMore":"Xem thêm",
+    "friend":"người bạn",
+    "addMyCloseFriends":"Thêm các bạn thân của bạn",
+    "addNewFriend":"Thêm bạn mới",
+    "myFriends":"Bạn bè của tôi",
+    "myFriendRequest":"Yêu cầu kết bạn",
+    "suggestFriend":"Gợi ý kêt bạn",
+    "add":"Thêm"
 }
