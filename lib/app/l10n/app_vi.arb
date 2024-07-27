@@ -1,15 +1,10 @@
 {
     "hello": "Xin chào",
-    "addfriend": " Thêm bạn",
-    "friends": "bạn bè",
-    "sendto": "Gửi đến...",
-    "feel": "Cảm nghĩ..." ,
     "friend": "Bạn bè",
     "list":"Danh sách",
     "proposal":"Đề xuất",
     "searchListMyFriend":"Tìm kiếm theo email, tên, số điện thoại ...",
     "friendRequest":"Lời mời kết bạn",
-    "userNotFound": "Không tìm thấy người dùng"
     "userNotFound":"Không tìm thấy người dùng",
     "loginNow":"Đăng nhập ngay!",
     "invalidEmail":"Không phải email",

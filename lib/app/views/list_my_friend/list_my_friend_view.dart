@@ -1,12 +1,9 @@
-// app/views/list_my_friend/list_my_friend_view.dart
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hit_moments/app/core/extensions/theme_extensions.dart';
 import 'package:hit_moments/app/providers/user_provider.dart';
 import 'package:hit_moments/app/views/list_my_friend/list_my_friend_widget.dart';
-import 'package:hit_moments/app/views/moment/camera/take_pictures_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../../core/constants/assets.dart';
@@ -46,10 +43,6 @@ class _ListMyFriendViewState extends State<ListMyFriendView> {
           leading: Padding(
             padding: EdgeInsets.only(top: 15.w),
             child: BackButton(
-              onPressed: () {Navigator.of(context).push(MaterialPageRoute(builder: (context) => TakePictureScreen()));},
-              color: AppColors
-                  .of(context)
-                  .neutralColor9,
               color: AppColors.of(context).neutralColor9,
             ),
           ),

@@ -1,9 +1,5 @@
 {
     "hello": "Hello",
-    "addfriend": " Add friend",
-    "friends": "friends",
-    "sendto": "Send to...",
-    "feel": "feelings...",
     "friend": "Friend",
     "list":"List",
     "proposal":"Proposal",

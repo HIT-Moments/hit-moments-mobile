@@ -1,4 +1,3 @@
-// app/views/moment/moment_view.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -70,6 +69,7 @@ class _MomentViewState extends State<MomentView> {
                   icon1Color: AppColors.of(context).neutralColor10,
                   iconHeight: 20.w, iconWidth: 20.w,
                   onPress: () {
+
                     //SelectFriendWidget();
                   },),
             )

@@ -1,8 +1,8 @@
-// app/views/list_my_friend/components/friend_request.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
+
 import '../../../core/constants/assets.dart';
 import '../../../core/extensions/theme_extensions.dart';
 import '../../../datasource/network_services/user_service.dart';
