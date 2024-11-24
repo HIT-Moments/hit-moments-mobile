@@ -13,9 +13,10 @@ class Information extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 8.h),
+      padding: EdgeInsets.symmetric(vertical: 8.w),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center, // Add this line
         children: [
           SvgPicture.asset(
             iconUrl,
@@ -23,10 +24,10 @@ class Information extends StatelessWidget {
             height: 36.h,
           ),
           SizedBox(
-            width: 24.w, // Add spacing between icon and text
+            width: 16.w, // Add spacing between icon and text
           ),
           SizedBox(
-            width: 180.w,
+            width: 160.w,
             child: Text(
               textAlign: TextAlign.left,
               overflow: TextOverflow.ellipsis,

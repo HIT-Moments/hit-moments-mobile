@@ -1,7 +1,14 @@
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:camera/camera.dart';
 import 'package:hit_moments/app/datasource/local/storage.dart';
 import 'package:hit_moments/app/models/user_model.dart';
+import 'package:mime/mime.dart';
 import '../../core/base/base_connect.dart';
 import '../../core/config/api_url.dart';
+import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
 
 class UserService {
   static Future<dynamic> getFriends() async {
@@ -174,24 +181,62 @@ class UserService {
       return 0;
     }
   }
-  static Future<dynamic>updateUser() async{
-    try{
-      var response = await BaseConnect.onRequest(
-          ApiUrl.getMe,
-          RequestMethod.POST,
+  Future<dynamic> updateUser(String? fullName,String? email, String? phoneNumber, String? dob,  File? avatar) async {
+    try {
+      // Tạo yêu cầu MultipartRequest
+      var request = http.MultipartRequest(
+        'PUT',
+        Uri.parse(ApiUrl.getMe),
       );
-      int statusCode = response['statusCode'];
-      print(response['data']["user"]);
-      if(statusCode == 200){
-        print(response['data']["user"]);
-        return User.fromJson(response['data']["user"]);
-      }else{
-        print("Lỗi: ${response['message']} ");
+      if (avatar != null) {
+        File file = File(avatar.path);
+        if (!await file.exists()) {
+          print("File does not exist at path: ${file.path}");
+          return "File does not exist";
+        }
+        // Lấy MIME type của tệp
+        String? mimeType = lookupMimeType(file.path);
+        if (mimeType == null) {
+          print("MIME type could not be determined");
+          return "MIME type could not be determined";
+        }
+        request.files.add(await http.MultipartFile.fromPath(
+          'avatar',
+          file.path,
+          contentType: MediaType.parse(mimeType),
+          filename: 'update_avatar.jpg',
+        ));
       }
-      return statusCode;
-    }catch(e){
-      print("Lỗi: ${e}");
-      return 0;
+      request.headers['Authorization'] = 'Bearer ${getToken()}';
+      if(fullName != null) {
+        request.fields['fullname'] = fullName;
+      }
+      if(email != null) {
+        request.fields['email'] = email;
+      }
+      if(phoneNumber != null) {
+        request.fields['phoneNumber'] = phoneNumber;
+      }
+      if(dob != "" && dob != null) {
+        request.fields['dob'] = dob;
+      }
+      var response = await request.send();
+      var responseStream = response.stream.transform(utf8.decoder);
+      var body = await responseStream.join();
+      // print(body);
+      int statusCode = response.statusCode;
+      if(statusCode == 200) {
+        var jsonResponse = jsonDecode(body);
+        var user = jsonResponse['data']['user'];
+        setAvatarUser(user['avatar']);
+        return user;
+      }
+      else{
+        return statusCode;
+      }
+    } catch (e) {
+      print("Error while uploading file: $e");
+      return e;
     }
   }
 }

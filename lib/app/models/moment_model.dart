@@ -11,6 +11,8 @@ class MomentModel{
   final String? momentID;
   final String? content;
   final String? weather;
+  final String? musicId;
+  final String? linkMusic;
 
   MomentModel( {
     this.imgAvatar,
@@ -23,7 +25,9 @@ class MomentModel{
     this.updateAt,
     this.momentID,
     this.content,
-    this.weather
+    this.weather,
+    this.musicId,
+    this.linkMusic,
   });
 
   factory MomentModel.fromJson(Map<String, dynamic> json){
@@ -39,6 +43,8 @@ class MomentModel{
       weather: json['weather'],
       createAt: DateTime.parse(json['createdAt']),
       updateAt: DateTime.parse(json['updatedAt']),
+      musicId: json['musicId'],
+      linkMusic: json['linkMusic'],
     );
   }
 

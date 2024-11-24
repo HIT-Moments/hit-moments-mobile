@@ -18,7 +18,6 @@ class WeatherProvider extends ChangeNotifier {
 
     try {
       final position = await Geolocator.getCurrentPosition();
-      print(position);
       dynamic response = await WeatherService().getCurrentWeather(
           position.latitude.toString(), position.longitude.toString());
       weather = WeatherModel.fromJson(response);
@@ -51,7 +50,6 @@ class WeatherProvider extends ChangeNotifier {
     if (permission == LocationPermission.deniedForever) {
       return false;
     }
-
     return true;
   }
 }

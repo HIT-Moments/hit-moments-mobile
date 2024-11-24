@@ -6,6 +6,7 @@ import 'package:flutter_file_dialog/flutter_file_dialog.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hit_moments/app/core/config/enum.dart';
+import 'package:hit_moments/app/custom/widgets/app_snack_bar.dart';
 import 'package:hit_moments/app/custom/widgets/scale_on_tap_widget.dart';
 import 'package:hit_moments/app/models/moment_model.dart';
 import 'package:hit_moments/app/providers/list_moment_provider.dart';
@@ -28,52 +29,86 @@ class SelectFunctionWidget extends StatefulWidget {
 }
 
 class _SelectFunctionWidgetState extends State<SelectFunctionWidget> {
+  late ScaffoldMessengerState scaffoldMessenger;
+  @override
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
+  //   scaffoldMessenger = ScaffoldMessenger.of(context);
+  //   appColors = AppColors.of(context);
+  // }
+  late String saveImageSuccessMessage;
+  late String errorMessage;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    saveImageSuccessMessage = S.of(context).saveImageSuccess;
+    errorMessage = S.of(context).error;
+  }
   TextEditingController controller = TextEditingController();
   var random = Random();
   Future<void> _saveImage(BuildContext context) async {
-    final scaffoldMessenger = ScaffoldMessenger.of(context);
-    late String message;
     try {
-      final http.Response response = await http.get(
-          Uri.parse(widget.momentModel.image??""));
+      final response = await http.get(Uri.parse(widget.momentModel.image ?? ""));
       final dir = await getTemporaryDirectory();
-      var filename = '${dir.path}/SaveImage${random.nextInt(100)}.png';
+      final filename = '${dir.path}/SaveImage${Random().nextInt(100)}.png';
       final file = File(filename);
       await file.writeAsBytes(response.bodyBytes);
+
       final params = SaveFileDialogParams(sourceFilePath: file.path);
       final finalPath = await FlutterFileDialog.saveFile(params: params);
+
       if (finalPath != null) {
-        message = S.of(context).saveImageSuccess;
+        Fluttertoast.showToast(
+          msg: saveImageSuccessMessage,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.green,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+        // AppSnackBar.showSuccess(context,saveImageSuccessMessage);
       }
     } catch (e) {
-      message = e.toString();
-      scaffoldMessenger.showSnackBar(SnackBar(
-        content: Text(
-          message,
-          style:  const TextStyle(
-            fontSize: 12,
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        backgroundColor: Color(0xFFe91e63),
-      ));
-    }
-
-    if (message != null) {
-
-      Fluttertoast.showToast(
-        msg: message,
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Colors.green,
-        textColor: Colors.white,
-        fontSize: 16.0,
-      );
-
+      AppSnackBar.showError(context, errorMessage, e.toString());
     }
   }
+
+  // Future<void> _saveImage(BuildContext context) async {
+  //   late String message;
+  //   try {
+  //     final http.Response response = await http.get(
+  //         Uri.parse(widget.momentModel.image??""));
+  //     final dir = await getTemporaryDirectory();
+  //     var filename = '${dir.path}/SaveImage${random.nextInt(100)}.png';
+  //     final file = File(filename);
+  //     await file.writeAsBytes(response.bodyBytes);
+  //     final params = SaveFileDialogParams(sourceFilePath: file.path);
+  //     final finalPath = await FlutterFileDialog.saveFile(params: params);
+  //     if (finalPath != null) {
+  //       message = S.of(context).saveImageSuccess;
+  //       AppSnackBar.showSuccess(context,message);
+  //     }
+  //   } catch (e) {
+  //     message = e.toString();
+  //     AppSnackBar.showError(context,S.of(context).error,message);
+  //   }
+  //
+  //   if (message != null) {
+  //
+  //     // Fluttertoast.showToast(
+  //     //   msg: message,
+  //     //   toastLength: Toast.LENGTH_SHORT,
+  //     //   gravity: ToastGravity.BOTTOM,
+  //     //   timeInSecForIosWeb: 1,
+  //     //   backgroundColor: Colors.green,
+  //     //   textColor: Colors.white,
+  //     //   fontSize: 16.0,
+  //     // );
+  //     AppSnackBar.showError(context,S.of(context).error,message);
+  //   }
+  // }
 
   Future<void> _deleteMoment(String momentID) async {
     showDialog(
@@ -311,7 +346,6 @@ class _SelectFunctionWidgetState extends State<SelectFunctionWidget> {
       onPress: () {
         showPopover(
             context: context,
-
             bodyBuilder: (context) =>
                 PopoverSelectFunction(options: [
                   {'menu': S.of(context).download},

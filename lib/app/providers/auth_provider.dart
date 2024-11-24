@@ -19,7 +19,7 @@ class AuthProvider extends ChangeNotifier {
   String? registerSuccess;
   String? emailExist;
   bool isRemember = false;
-
+  String?avatar;
   void fullFieldRegister(bool isFull) {
     isFullFieldRegister = isFull;
     notifyListeners();
@@ -59,36 +59,48 @@ class AuthProvider extends ChangeNotifier {
       notifyListeners();
     }
   }
-
+  void updateAvatar(String img){
+    avatar = img;
+    notifyListeners();
+  }
   Future<void> login(String email, String password, BuildContext context) async {
     loginStatus = ModuleStatus.loading;
     notifyListeners();
     try {
-      int result = await authService.login(email, password);
-      if (result == 200) {
+      // Thời gian loading thêm 2 giây rồi mới hiển thị kết quả
+      await Future.delayed(const Duration(seconds: 2));
+      var response = await authService.login(email, password);
+
+      int statusCode = response['statusCode'];
+
+      if (statusCode == 200) {
+        User user = User.fromJson(response['user']);
         loginSuccess = S.of(context).loginSuccess;
         loginStatus = ModuleStatus.success;
-
-        if(isRemember){
+        avatar = user.avatar;
+        if (isRemember) {
           setPassWord(password);
           setEmail(email);
         }
-      } else if (result == 401) {
+      } else if (statusCode == 401) {
         loginSuccess = S.of(context).loginError;
         loginStatus = ModuleStatus.fail;
-      } else if(result == 400){
-        loginSuccess =
-        S.of(context).emailInvalid;
+      } else if (statusCode == 400) {
+        loginSuccess = S.of(context).emailInvalid;
         loginStatus = ModuleStatus.fail;
-      }else {
+      } else {
         loginSuccess = S.of(context).networkError;
         loginStatus = ModuleStatus.fail;
       }
+
       notifyListeners();
     } catch (e) {
+      loginStatus = ModuleStatus.fail;
+      loginSuccess = S.of(context).networkError;
       notifyListeners();
     }
   }
+
 
 
   Future<void> register(String fullName, String phoneNumber,

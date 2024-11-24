@@ -4,7 +4,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hit_moments/app/core/constants/assets.dart';
 import 'package:hit_moments/app/core/constants/color_constants.dart';
 import 'package:hit_moments/app/core/extensions/theme_extensions.dart';
-import 'package:hit_moments/app/custom/widgets/search_data_not_found.dart';
 import 'package:provider/provider.dart';
 
 import '../../l10n/l10n.dart';
@@ -52,7 +51,7 @@ class _ListMyFriendWidgetState extends State<ListMyFriendWidget> {
     if (title == S.of(context).list) {
       setState(() {
         checkColorList = false;
-        if(_searchController.text.isNotEmpty) {
+        if (_searchController.text.isNotEmpty) {
           _searchController.clear(); // Xóa nội dung ô tìm kiếm
           context.read<UserProvider>().getFriendProposals();
         }
@@ -60,12 +59,7 @@ class _ListMyFriendWidgetState extends State<ListMyFriendWidget> {
     } else if (title == S.of(context).proposal) {
       setState(() {
         checkColorList = true;
-        if(_searchController.text.isNotEmpty){
-          _searchController.clear(); // Xóa nội dung ô tìm kiếm
-          context.read<UserProvider>().refeshData();
-        }
       });
-
     }
   }
 
@@ -94,34 +88,6 @@ class _ListMyFriendWidgetState extends State<ListMyFriendWidget> {
   }
 
   final TextEditingController _searchController = TextEditingController();
-  String? searchValue;
-  bool isSearch = true;
-  bool isCheckText = false;
-  void searchFriendByEmail() async {
-    if(checkColorList==false) {
-      if (_searchController.text.isNotEmpty) {
-        isCheckInput = false;
-        if (!Provider
-            .of<UserProvider>(context, listen: false)
-            .isSearchFriend) {
-          Provider.of<UserProvider>(context, listen: false)
-              .getFriendUserByEmail(_searchController.text);
-          if (Provider
-              .of<UserProvider>(context, listen: false)
-              .friendList
-              .isEmpty) {
-            setState(() {
-              isSearch = false;
-            });
-          }
-        }
-      } else {
-        setState(() {
-          isCheckInput = true;
-        });
-      }
-    }
-  }
 
   Future<void> _refreshData() async {
     context.read<UserProvider>().getFriendOfUser();
@@ -163,136 +129,41 @@ class _ListMyFriendWidgetState extends State<ListMyFriendWidget> {
               ),
             ),
           ),
-          Container(
-            margin: EdgeInsets.only(
-              left: 20.w,
-              right: 20.w,
-            ),
-            child: Column(
-              children: [
-                TextFormField(
-                  controller: _searchController,
-                  decoration: InputDecoration(
-                    hintText: S.of(context).searchListMyFriend,
-                    hintStyle: AppTextStyles.of(context).light20.copyWith(
-                          color: AppColors.of(context).neutralColor11,
-                        ),
-                    suffixIcon: GestureDetector(
-                      onTap: searchFriendByEmail,
-                      child: Padding(
-                        padding: EdgeInsets.all(12.w),
-                        child: SvgPicture.asset(
-                          Assets.icons.search,
-                          color: AppColors.of(context).neutralColor11,
-                          height: 10.w,
-                          width: 10.w,
-                        ),
-                      ),
-                    ),
-                    contentPadding: EdgeInsets.only(
-                      left: 20.w,
-                      right: 20.w,
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30),
-                      borderSide: BorderSide(
-                        color: AppColors.of(context).neutralColor8,
-                        width: 1,
-                      ),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30),
-                      borderSide: BorderSide(
-                        color: AppColors.of(context).neutralColor10,
-                        width: 1,
-                      ),
-                    ),
-                  ),
-                  onTap: () => searchValue,
-                  onChanged: (value) {
-                    _searchController.text = value;
-                    setState(() {
-                      isCheckText = true;
-                    });
-                  },
-                  onFieldSubmitted: (value) {
-                    searchFriendByEmail(); // Call the function when the user submits the form
-                  },
-                ),
-                if (isCheckInput)
-                  Text(
-                    S.of(context).titleNofriend,
-                    style:  AppTextStyles.of(context).light20.copyWith(
-                      color: ColorConstants.accentRed,
-                    )
-                  ),
-              ],
-            ),
-          ),
           checkColorList != true
-              ? Container(
-                  margin: EdgeInsets.only(
-                    top: 20.h,
-                    left: 20.w,
-                    right: 20.w,
+              ? Column(
+                children: [
+                  ListMyFriend(
+                    users: widget.friendsUsers,
+                    setExpanded: setExpandedMyFriend,
+                    isExpanded: isExpandedMyFriend,
                   ),
-                  padding: EdgeInsets.only(
-                    top: 10.h,
-                    left: 12.w,
-                    right: 12.w,
-                    bottom: 10.h,
-                  ),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: AppColors.of(context).neutralColor8,
-                      width: 1,
-                    ),
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  child: Column(
-                    children: [
-                      !context.watch<UserProvider>().isSearchFriend
-                          ? (isSearch == true
-                              ? ListMyFriend(
-                                  users: widget.friendsUsers,
-                                  setExpanded: setExpandedMyFriend,
-                                  isExpanded: isExpandedMyFriend,
-                                  keySearch: checkColorList == !true
-                                      ? _searchController.text
-                                      : "",
-                                )
-                              : const SearchDataNotFound())
-                          : const Center(
-                              child: CircularProgressIndicator(),
-                            ),
-                      context.watch<UserProvider>().isSearchFriend
-                          ? const SizedBox()
-                          : (widget.friendsUsers.length > 3
-                              ? Padding(
-                                  padding: EdgeInsets.all(6.w),
-                                  child: InkWell(
-                                    onTap: setExpandedMyFriend,
-                                    child: isExpandedMyFriend
-                                        ? SvgPicture.asset(
-                                            Assets.icons.upSVG,
-                                            width: 13.w,
-                                            height: 13.w,
-                                            color: AppColors.of(context)
-                                                .neutralColor9,
-                                          )
-                                        : SvgPicture.asset(
-                                            Assets.icons.downSVG,
-                                            width: 13.w,
-                                            height: 13.w,
-                                            color: AppColors.of(context)
-                                                .neutralColor9,
-                                          ),
-                                  ),
-                                )
-                              : const SizedBox())
-                    ],
-                  ),
-                )
+                  context.watch<UserProvider>().isSearchFriend
+                      ? const SizedBox()
+                      : (widget.friendsUsers.length > 3
+                          ? Padding(
+                              padding: EdgeInsets.all(6.w),
+                              child: InkWell(
+                                onTap: setExpandedMyFriend,
+                                child: isExpandedMyFriend
+                                    ? SvgPicture.asset(
+                                        Assets.icons.upSVG,
+                                        width: 13.w,
+                                        height: 13.w,
+                                        color: AppColors.of(context)
+                                            .neutralColor9,
+                                      )
+                                    : SvgPicture.asset(
+                                        Assets.icons.downSVG,
+                                        width: 13.w,
+                                        height: 13.w,
+                                        color: AppColors.of(context)
+                                            .neutralColor9,
+                                      ),
+                              ),
+                            )
+                          : const SizedBox())
+                ],
+              )
               : Container(
                   margin: EdgeInsets.only(
                     top: 20.h,
@@ -318,9 +189,9 @@ class _ListMyFriendWidgetState extends State<ListMyFriendWidget> {
                         users: widget.friendProposals,
                         setExpanded: setExpandedFriendProposals,
                         isExpanded: isExpandedFriendProposals,
-                        keySearch: checkColorList == true
-                            ? _searchController.text
-                            : "",
+                        // keySearch: checkColorList == true
+                        //     ? _searchController.text
+                        //     : "",
                       ),
                       if (widget.friendProposals.length > 3)
                         Padding(

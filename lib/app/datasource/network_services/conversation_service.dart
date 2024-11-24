@@ -26,7 +26,7 @@ import '../../models/conversation_model.dart';
 //   }
 // }
 class ConversationService{
-  Future<List<Conversation>> getConversations() async {
+  Future<dynamic> getConversations() async {
     try {
       var response = await BaseConnect.onRequest(
         ApiUrl.getConversation,
@@ -37,7 +37,7 @@ class ConversationService{
         List< dynamic> conversationList = response['data']["conversations"]??[] ;
         return conversationList.map((item) => Conversation.fromJson(item as dynamic)).toList();
       } else {
-        print("Lỗi: ${response['message']} ");
+        return statusCode;
       }
     } catch (e) {
       print("Lỗi: $e");

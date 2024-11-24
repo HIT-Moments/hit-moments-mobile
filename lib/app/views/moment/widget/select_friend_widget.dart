@@ -29,7 +29,7 @@ class _SelectFriendWidgetState extends State<SelectFriendWidget> with SingleTick
 
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 200),
+      duration: const Duration(milliseconds: 200),
       upperBound: 0.5,
     );
   }
@@ -41,10 +41,10 @@ class _SelectFriendWidgetState extends State<SelectFriendWidget> with SingleTick
             _isChangeColor = !_isChangeColor;
           });
           if(!_isChangeColor){
-            _controller..reverse(from: 0.5);
+            _controller.reverse(from: 0.5);
 
           }else{
-            _controller..forward(from: 0.0);
+            _controller.forward(from: 0.0);
           }
           showPopover(
               context: context,

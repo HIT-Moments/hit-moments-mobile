@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hit_moments/app/core/constants/assets.dart';
+import 'package:hit_moments/app/core/extensions/format_time_extension.dart';
 import 'package:hit_moments/app/custom/widgets/icon_on_tap_scale.dart';
 import 'package:hit_moments/app/custom/widgets/scale_on_tap_widget.dart';
 import 'package:hit_moments/app/datasource/local/storage.dart';
@@ -117,25 +118,76 @@ class _MomentWidgetState extends State<MomentWidget> {
     );
   }
 
-
-
   @override
   Widget build(BuildContext context) {
-
     return SingleChildScrollView(
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(
-              margin: EdgeInsets.only(top: 16.w),
-              decoration: BoxDecoration(
-                borderRadius: const BorderRadius.all(Radius.circular(20)),
-                border: Border.all(width: 0.1, color: AppColors.of(context).neutralColor10),
-              ),
+            alignment: Alignment.center,
+              margin: EdgeInsets.only(top: 10.w,left: 4.w,right: 4.w),
               child: MomentContentWidget(momentModel: widget.momentModel)
           ),
-          const SizedBox(height: 48,),
+          SizedBox(height: 16.h,),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(2),
+                decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.all(Radius.circular(100))),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(40.w),
+                  child: CachedNetworkImage(
+                    imageUrl: widget.momentModel.imgAvatar ?? "",
+                    width: 40.w,
+                    height: 40.w,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+              SizedBox(
+                width: 8.w,
+              ),
+              Text(
+                widget.momentModel.userName ?? "",
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+                style: AppTextStyles.of(context).regular16.copyWith(
+                  height: 1.5,
+                  overflow: TextOverflow.ellipsis,
+                  color: AppColors.of(context).neutralColor1,
+                  shadows: [
+                    const Shadow(
+                      blurRadius: 1.0,
+                      color: Colors.black,
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                width: 8.w,
+              ),
+              Text(
+                FormatTimeExtension().formatTimeDifference(
+                    widget.momentModel.createAt!, context),
+                style: AppTextStyles.of(context).light14.copyWith(
+                  height: 1,
+                  color: AppColors.of(context).neutralColor6,
+                  shadows: [
+                    Shadow(
+                      blurRadius: 1.0,
+                      color: AppColors.of(context).neutralColor12,
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
+          SizedBox(height: 80.h,),
           Row(
             children: [
               Expanded(
@@ -152,7 +204,7 @@ class _MomentWidgetState extends State<MomentWidget> {
                             width: 1.w,
                             color: AppColors.of(context).primaryColor10
                           ),
-                          borderRadius: BorderRadius.all(Radius.circular(100))
+                          borderRadius: const BorderRadius.all(Radius.circular(100))
                       ),
                       child: Text(S.of(context).writeComment,
                         style: AppTextStyles.of(context).light20.copyWith(
@@ -174,7 +226,7 @@ class _MomentWidgetState extends State<MomentWidget> {
                               width: 1.w,
                               color: AppColors.of(context).primaryColor10
                           ),
-                          borderRadius: BorderRadius.all(Radius.circular(100))
+                          borderRadius: const BorderRadius.all(Radius.circular(100))
                       ),
                       child: Text(S.of(context).viewInteractions,
                         style: AppTextStyles.of(context).light20.copyWith(
@@ -223,7 +275,6 @@ class _MomentWidgetState extends State<MomentWidget> {
               )
             ],
           ),
-          const SizedBox(),
         ],
       ),
     );

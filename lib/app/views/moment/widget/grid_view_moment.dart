@@ -34,7 +34,7 @@ class _GridViewMomentState extends State<GridViewMoment> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(12),
+      // padding: EdgeInsets.all(12),
       color: AppColors.of(context).neutralColor1,
       child: GridView.builder(
         itemCount: widget.listMoment.length,

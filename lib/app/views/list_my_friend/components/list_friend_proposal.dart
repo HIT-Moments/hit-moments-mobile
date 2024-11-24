@@ -17,13 +17,11 @@ class ListFriendSuggestions extends StatefulWidget {
       {super.key,
       required this.users,
       required this.setExpanded,
-      required this.isExpanded,
-      required this.keySearch});
+      required this.isExpanded,});
 
   final VoidCallback setExpanded;
   final bool isExpanded;
   final List<User> users;
-  final String keySearch;
 
   @override
   State<ListFriendSuggestions> createState() => _ListFriendSuggestionsState();
@@ -51,11 +49,7 @@ class _ListFriendSuggestionsState extends State<ListFriendSuggestions> {
 
   @override
   Widget build(BuildContext context) {
-    List<User> lists = widget.users
-        .where((user) => user.fullName
-        .toLowerCase()
-        .contains(widget.keySearch.toLowerCase()))
-        .toList();
+    List<User> lists = widget.users;
     return lists.isNotEmpty
         ? SingleChildScrollView(
       child: Column(

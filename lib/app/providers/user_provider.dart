@@ -1,17 +1,20 @@
 // app/providers/user_provider.dart
-import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:hit_moments/app/core/config/enum.dart';
+import 'package:hit_moments/app/datasource/local/storage.dart';
+import 'package:hit_moments/app/datasource/network_services/auth_service.dart';
 import 'package:hit_moments/app/datasource/network_services/user_service.dart';
-import 'package:hit_moments/app/models/base_response.dart';
-import '../models/friend_model.dart';
+
 import '../models/user_model.dart';
 
 class UserProvider extends ChangeNotifier {
+  final AuthService authService = AuthService();
+  final UserService userService = UserService();
   late List<User> users;
   late User user;
-  List<User> friendList=[];
+  List<User> friendList = [];
   List<User> friendListTmp = [];
   List<User> friendRequests = [];
   List<User> friendSuggests = [];
@@ -23,9 +26,11 @@ class UserProvider extends ChangeNotifier {
       isLoandingFriendSuggests = false,
       isLoandingFriend = false,
       isLoandingProfiles = false,
-      isLoandingUser = false;
+      isLoandingUser = false,
+      isLoadingProfile = false;
 
   bool isSearchFriend = false;
+
   void getFriendOfUser() async {
     isLoandingFriendList = true;
     notifyListeners();
@@ -57,14 +62,13 @@ class UserProvider extends ChangeNotifier {
       return;
     }
   }
-  void getMe() async {
-    isLoandingProfiles = true;
-    // notifyListeners();
-    user = await UserService.getMe() as User ;
-    isLoandingProfiles = false;
-    // notifyListeners();
-  }
 
+ void getMe() async {
+    isLoandingProfiles = true;
+    user = await authService.getMe() as User;
+    isLoandingProfiles = false;
+    notifyListeners();
+  }
 
   void getFriendProposals() async {
     isLoandingFriendSuggests = true;
@@ -111,5 +115,21 @@ class UserProvider extends ChangeNotifier {
       print('User: ${user.fullName}, Email: ${user.email}');
     });
     // notifyListeners();
+  }
+
+  Future<void> updateUser(String? fullName, String? email, String? phoneNumber,
+      String? dob, File? avatar) async {
+    isLoadingProfile = true;
+    notifyListeners();
+    final response =
+        await userService.updateUser(fullName, email, phoneNumber, dob, avatar);
+    if (response != 200) {
+      // print("alo");
+      // print(response);
+      user = User.fromJson(response);
+      isLoadingProfile = false;
+      print("edit provider$isLoadingProfile" );
+      notifyListeners();
+    }
   }
 }

@@ -1,17 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:io';
-import 'dart:typed_data';
-import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:camera/camera.dart';
 import 'package:http/http.dart' as http;
-import 'package:socket_io_client/socket_io_client.dart' as IO;
 import '../../core/base/base_connect.dart';
 import '../../core/config/api_url.dart';
 import '../../models/react_model.dart';
 import '../local/storage.dart';
-
+import 'package:mime/mime.dart';
+import 'package:http_parser/http_parser.dart';
 class MomentService{
 
   Future<dynamic> sendReact(String momentId) async{
@@ -104,26 +100,93 @@ class MomentService{
     String base64String = base64Encode(bytes);
     return base64String;
   }
-  Future<dynamic> createMoment(String content, String weather, File image) async{
-    String base64Image = await convertFileToBase64(image);
+  // Future<dynamic> createMoment(String content, String weather, XFile image) async {
+  //   try {
+  //     File file = File(image.path);
+  //     print('Image MIME type: ${image.mimeType}');
+  //     print("File extension: ${file.path.split('.').last}");
+  //     var request = http.MultipartRequest(
+  //       'POST',
+  //       Uri.parse(ApiUrl.getListMoment),
+  //     );
+  //     request.headers['Authorization'] = 'Bearer ${getToken()}';
+  //     request.fields['content'] = content;
+  //     request.fields['weather'] = weather;
+  //     request.fields['music'] = "669e96c181821615578432e7";
+  //     if (await file.exists()) {
+  //       request.files.add(await http.MultipartFile.fromPath(
+  //         'image',
+  //         file.path,
+  //         filename: 'anh_moment.jpg', // Tên tệp trên server
+  //       ));
+  //     } else {
+  //       print("File does not exist at path: ${file.path}");
+  //     }
+  //     var response = await request.send();
+  //     var responseStream = response.stream.transform(utf8.decoder);
+  //     var body = await responseStream.join();
+  //     print('Response body: $body');
+  //     int statusCode = response.statusCode;
+  //     return statusCode;
+  //   } catch (e) {
+  //     print("Error while uploading file: $e");
+  //     return e;
+  //   }
+  // }
+  Future<dynamic> createMoment(String? content, String? weather, XFile image,String? musicId, String? linkMusic) async {
+    try {
+      // Kiểm tra xem tệp có tồn tại hay không
+      File file = File(image.path);
+      if (!await file.exists()) {
+        print("File does not exist at path: ${file.path}");
+        return "File does not exist";
+      }
 
-    final Map<String, dynamic> body = {
-      'image': base64Image,
-      'content': content,
-      'weather': weather
-    };
-    try{
-      final response = await BaseConnect.onRequest(
-          ApiUrl.getListMoment,
-          RequestMethod.POST,
-          body: body
+      // Lấy MIME type của tệp
+      String? mimeType = lookupMimeType(file.path);
+      if (mimeType == null) {
+        print("MIME type could not be determined");
+        return "MIME type could not be determined";
+      }
+
+      // Tạo yêu cầu MultipartRequest
+      var request = http.MultipartRequest(
+        'POST',
+        Uri.parse(ApiUrl.getListMoment),
       );
-      int statusCode = response['statusCode'];
-      print("két quả là ${response}");
-      return statusCode;
-    }catch(e){
-      print("lỗi $e");
 
+      // Thêm các trường vào yêu cầu
+      request.headers['Authorization'] = 'Bearer ${getToken()}';
+      if (content != null){
+        request.fields['content'] = content;
+      }
+      if (weather != null){
+        request.fields['weather'] = weather;
+      }
+      if (musicId != null){
+        request.fields['musicId'] = musicId;
+      }
+      if (linkMusic != null){
+        request.fields['linkMusic'] = linkMusic;
+      }
+      // Thêm tệp vào yêu cầu
+      request.files.add(await http.MultipartFile.fromPath(
+        'image',
+        file.path,
+        contentType: MediaType.parse(mimeType),
+        filename: 'anh_moment.jpg', // Tên tệp trên server
+      ));
+      // Gửi yêu cầu
+      var response = await request.send();
+      var responseStream = response.stream.transform(utf8.decoder);
+      var body = await responseStream.join();
+
+      // Kiểm tra trạng thái phản hồi
+      int statusCode = response.statusCode;
+      print('Response body: $body');
+      return statusCode;
+    } catch (e) {
+      print("Error while uploading file: $e");
       return e;
     }
   }

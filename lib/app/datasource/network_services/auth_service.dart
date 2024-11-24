@@ -10,28 +10,35 @@ class AuthService{
       'email': email,
       'password': password
     };
-    try{
+    try {
       var response = await BaseConnect.onRequest(
-          ApiUrl.login,
+        ApiUrl.login,
         RequestMethod.POST,
-        body: body
+        body: body,
       );
+
       int statusCode = response['statusCode'];
-      if(statusCode == 200){
+
+      if (statusCode == 200) {
         String token = response['data']['accessToken'];
+        String refreshToken = response['data']['accessToken'];
         String userID = response['data']['user']['_id'];
-        print("iduser: ${userID}");
         setToken(token);
+        setRefreshToken(refreshToken);
         setUserID(userID);
-      }else{
-        print("looxi ${response['message']} vaf ${statusCode}");
+        setAvatarUser(response['data']['user']['avatar']);
+
+        // Return both user data and status code
+        return {'statusCode': statusCode, 'user': response['data']['user']};
       }
-      return statusCode;
-    }catch(e){
+
+      return {'statusCode': statusCode}; // return only status code if not 200
+    } catch (e) {
       print("Lỗi là: ${e}");
-      return 0;
+      return {'statusCode': 0}; // return statusCode 0 for errors
     }
   }
+
 
 
   Future<dynamic> register(String fullName, String phoneNumber, String dateOfBirth,
@@ -47,7 +54,7 @@ class AuthService{
       var response = await BaseConnect.onRequest(
           ApiUrl.register, RequestMethod.POST, body: body);
       int statusCode = response['statusCode'];
-      String mess = response['message'];
+      // String mess = response['message'];
       return statusCode;
       }catch(e){
       return 0;
@@ -67,6 +74,20 @@ class AuthService{
       }
     }catch(e){
       return e.toString();
+    }
+  }
+
+  Future<dynamic> forgotPassword(String email) async{
+    Map<String, dynamic> body = {
+      'email': email
+    };
+    try{
+      var response = await BaseConnect.onRequest(
+          ApiUrl.forgotPassword, RequestMethod.POST, body: body);
+      int statusCode = response['statusCode'];
+      return statusCode;
+    }catch(e){
+      return 0;
     }
   }
 

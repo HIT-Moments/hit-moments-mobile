@@ -10,6 +10,14 @@ setToken(String value) {
   box.write(StorageConstants.token, value);
 }
 
+setRefreshToken(String value) {
+  box.write(StorageConstants.refreshToken, value);
+}
+
+String getRefreshToken() {
+  return box.read(StorageConstants.refreshToken) ?? '';
+}
+
 String getToken() {
   return box.read(StorageConstants.token) ?? '';
 }
@@ -63,4 +71,10 @@ String getUserId() {
 }
 bool getIsDarkMode() {
   return box.read(StorageConstants.isDarkMode) ?? false;
+}
+setAvatarUser(String value) {
+  box.write(StorageConstants.avatarUser, value);
+}
+String getAvatarUser() {
+  return box.read(StorageConstants.avatarUser) ?? '';
 }

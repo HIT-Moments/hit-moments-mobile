@@ -26,6 +26,6 @@ abstract class AppPages {
     AppRoutes.MY_CONVERSATION : (context) => const ConversationView(),
     AppRoutes.MY_PROFILE : (context) => const PersonalPageScreen(),
     AppRoutes.MY_HOME : (context) => const HomeView(),
-    AppRoutes.ONBOARDING : (context) => const Onbording(),
+    AppRoutes.ONBOARDING : (context) => const Onboarding(),
   };
 }

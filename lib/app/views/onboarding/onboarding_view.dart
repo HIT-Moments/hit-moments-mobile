@@ -1,8 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:hit_moments/app/core/extensions/theme_extensions.dart';
+import 'package:hit_moments/app/datasource/local/storage.dart';
 import 'package:hit_moments/app/views/example/home_view.dart';
 
 import '../../core/constants/assets.dart';
@@ -11,14 +10,14 @@ import '../../l10n/l10n.dart';
 import '../../models/content_model.dart';
 import '../../routes/app_routes.dart';
 
-class Onbording extends StatefulWidget {
-  const Onbording({super.key});
+class Onboarding extends StatefulWidget {
+  const Onboarding({super.key});
 
   @override
-  _OnbordingState createState() => _OnbordingState();
+  OnboardingState createState() => OnboardingState();
 }
 
-class _OnbordingState extends State<Onbording> {
+class OnboardingState extends State<Onboarding> {
   int currentIndex = 0;
   late PageController _controller;
 
@@ -80,7 +79,7 @@ class _OnbordingState extends State<Onbording> {
                           color: AppColors.of(context).neutralColor12
                         ),
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       Text(
                         contents[i].discription,
                         textAlign: TextAlign.center,
@@ -94,19 +93,18 @@ class _OnbordingState extends State<Onbording> {
               },
             ),
           ),
-          Container(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(
-                contents.length,
-                    (index) => buildDot(index, context),
-              ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: List.generate(
+              contents.length,
+                  (index) => buildDot(index, context),
             ),
           ),
           SizedBox(height: 24.h,),
           ScaleOnTapWidget(
             onTap: (isSelect) {
               if (currentIndex == contents.length - 1) {
+                setIsFirstTime();
                 Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(
@@ -115,7 +113,7 @@ class _OnbordingState extends State<Onbording> {
                     ModalRoute.withName(AppRoutes.MY_HOME));
               }
               _controller.nextPage(
-                duration: Duration(milliseconds: 100),
+                duration: const Duration(milliseconds: 100),
                 curve: Curves.bounceIn,
               );
             },
@@ -124,7 +122,7 @@ class _OnbordingState extends State<Onbording> {
                   color: AppColors.of(context).primaryColor10,
                   borderRadius: const BorderRadius.all(Radius.circular(100)),
               ),
-              padding: EdgeInsets.symmetric(horizontal: 24, vertical: 6),
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 6),
               child: Text(
                   currentIndex == contents.length - 1 ?
                   S.of(context).continueString
@@ -147,7 +145,7 @@ class _OnbordingState extends State<Onbording> {
     return Container(
       height: 10,
       width: currentIndex == index ? 25 : 10,
-      margin: EdgeInsets.only(right: 5),
+      margin: const EdgeInsets.only(right: 5),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
         color: Theme.of(context).primaryColor,

@@ -72,6 +72,7 @@ class BaseConnect {
         dynamic body,
         Map<String, dynamic>? queryParam,
         String? idParam,
+        bool? isFormData,
       }) async {
     final connectivityResult = await Connectivity().checkConnectivity();
     if (!connectivityResult.contains(ConnectivityResult.mobile) &&
@@ -88,6 +89,7 @@ class BaseConnect {
     if (idParam != null) {
       uri = Uri.parse('$url/$idParam');
     }
+
     var request = http.Request(method.toString().split('.').last, uri);
     request = await requestInterceptor(request);
     http.Response response;

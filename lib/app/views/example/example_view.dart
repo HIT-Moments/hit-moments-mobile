@@ -133,7 +133,7 @@ class _ExampleViewState extends State<ExampleView> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => Onbording(),
+                        builder: (context) => Onboarding(),
                       ));
                 },
                 child: Text("Onboarding")),

@@ -10,10 +10,10 @@ import '../../../models/user_model.dart';
 
 class PopoverSelectFriend extends StatefulWidget {
   const PopoverSelectFriend({
-    Key? key,
+    super.key,
     required this.listFriend,
     required this.isBack,
-  }) : super(key: key);
+  });
 
   final List<User> listFriend;
   final void Function(User? friendSelect) isBack;

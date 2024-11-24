@@ -56,6 +56,24 @@ class _AssetsIcons {
   final addFriendSVG = 'assets/icons/add-friend.svg';
   final play = 'assets/icons/Play.svg';
   final logoSplashSVG = 'assets/icons/LogoSplash.svg';
+  final group = 'assets/icons/group.svg';
+  // final swap = 'assets/icons/Swap.svg';
+  final message = 'assets/icons/Union.svg';
+  final lightDark = 'assets/icons/light-dark.svg';
+  final userProfile = 'assets/icons/User-Profile.svg';
+  final phoneLight = 'assets/icons/phone-light.svg';
+  final calendarOutline = 'assets/icons/calendar-outline.svg';
+  final mail2 = 'assets/icons/mail2.svg';
+  final add = 'assets/icons/add.svg';
+  final sun = 'assets/icons/Sun.svg';
+  final dark = 'assets/icons/Dark.svg';
+  final vietNam = 'assets/icons/Vietnam.svg';
+  final my = 'assets/icons/My.svg';
+  final music = 'assets/icons/Music.svg';
+  final pause = 'assets/icons/Pause.svg';
+  final playMusic = 'assets/icons/play-music.svg';
+  final musicGif = 'assets/icons/music.gif';
+  final remove = 'assets/icons/ic_remove.svg';
 }
 
 class _AssetsImages {

@@ -94,7 +94,7 @@ class informationPersonalWidgetState extends State<informationPersonalWidget> {
               ElevatedButton(
                 onPressed: () { 
                   Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => editInformationPersonal(userInfor: widget.userInfor))
+                    MaterialPageRoute(builder: (context) => editInformationPersonal(userInfor: context.watch<UserProvider>().user,))
                   );
                 },
                 style: ElevatedButton.styleFrom(

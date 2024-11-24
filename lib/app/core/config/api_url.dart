@@ -1,8 +1,10 @@
 const example = 'example';
 
 mixin class ApiUrl {
-  static const _urlBase = "https://api.hitmoments.com/v1";
-
+  // static const _urlBase = "https://api.hitmoments.com/v1";
+  static const _urlBase = "http://192.168.0.103:3000/api/v1";
+  // static const _urlBase = "http://10.218.1.162:3000/api/v1";
+  static const forgotPassword = "$_urlBase/auth/forgot-password";
   static const login = "$_urlBase/auth/login";
   static const register = "$_urlBase/auth/register";
   static const getMe = "$_urlBase/auth/me";
@@ -25,4 +27,5 @@ mixin class ApiUrl {
   static const getChatMessage = "$_urlBase/messages/";
   static const sendMessage = "$_urlBase/messages";
   static const getChatMessageByReceiverId = "$_urlBase/messages";
+  static const getListMusic = "$_urlBase/musics";
 }

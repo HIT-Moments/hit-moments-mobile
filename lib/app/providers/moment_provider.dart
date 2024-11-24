@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:hit_moments/app/datasource/network_services/conversation_service.dart';
 import 'package:hit_moments/app/models/react_model.dart';
@@ -100,11 +101,11 @@ class MomentProvider extends ChangeNotifier{
 
   }
 
-  Future<void> createMoment(String content, String weather, File image) async{
+  Future<void> createMoment(String? content, String? weather, XFile image,String? musicId, String? linkMusic) async{
     createMomentStatus = ModuleStatus.loading;
     notifyListeners();
-    final response =  await MomentService().createMoment(content, weather, image);
-    if(response == 200){
+    final response =  await MomentService().createMoment(content, weather, image, musicId, linkMusic);
+    if(response == 201){
       createMomentResult = "Thành công";
       createMomentStatus = ModuleStatus.success;
 
